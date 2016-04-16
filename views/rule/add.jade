@@ -1,0 +1,47 @@
+extends ../layout
+
+block content
+	h3 Rules
+	hr
+	div.col-md-12
+		h4 Add Rule
+		div.col-md-6
+			form(method="POST", action="/rules/register")
+				div.form-group
+					label(for="name") Name:
+					input.form-control(required="required",type="text", name="name")								
+				div.form-group
+					label(for="name") Gateway:
+					select#gateway_type.form-control(required="required",name="gateway")
+						-each opt,i in gateways
+							option(value="#{opt._id}@@#{opt.name}") #{opt.name}
+				div.form-group
+					label(for="sensor_type") Sensor:
+					input#sensor_type.form-control(required="required",type="text",name="sensor_type",readonly="readonly", value="#{sensor_type}")
+
+				div.form-group		
+					label(for="condition") Condition:
+					select#condition.form-control(required="required",name="condition")
+						option(value="<") <
+						option(value=">") >
+						option(value="=") =
+				div.form-group
+					label(for="threshold") Threshold:
+					input#threshold.form-control(required="required",name="threshold", type="text")					
+				div.form-group
+					label(for="threshold") Frequency(in mins):
+					input#threshold.form-control(required="required",name="frequency", type="number")
+				div.form-group
+					label(for="condition") Status:
+					select#condition.form-control(required="required",name="status")
+						option(value="enable") Enable
+						option(value="disable") Disbable
+				div.col-md-offset-5
+					input.btn.btn-success(required="required",type="submit", value="Submit")
+					input(type="hidden",name="user_app_id",value="#{user_app_id}")
+					input(type="hidden",name="rule_id",value="#{rule_id}")
+					input(type="hidden",name="rule_name",value="#{rule_name}")
+
+block inPageScript
+	script.
+		

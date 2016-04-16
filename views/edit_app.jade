@@ -1,0 +1,18 @@
+extends layout
+
+block content	
+	h3 Edit IoT User Application
+	hr
+	div.col-md-6
+		form#formLogin(method="POST", action="/apps/update")
+			div.form-group
+				label(for="name") Name: 
+				input#inputUsername.form-control(required="required",type="text", name="name", value="#{name}")			
+			div.col-md-offset-5
+				div.col-md-6
+					input.btn.btn-success(required="required",type="submit", value="Update")
+					input(type="hidden",name="app_id",value="#{app_id}")
+                                
+block inPageScript
+	script.
+		

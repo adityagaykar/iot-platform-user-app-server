@@ -1,0 +1,21 @@
+extends ../layout
+
+block content
+	h3 Rules
+	hr
+	div.col-md-12
+		h4 Select Rule
+		div.col-md-6
+			form(method="POST", action="/rules/add")
+				div.form-group
+					label(for="name") Name:				
+					select.form-control(required="required",name="rule")
+						-each opt,i in rules
+							option(value="#{opt.description}") #{opt.name}				
+				div.col-md-offset-5
+					input.btn.btn-success(required="required",type="submit", value="Submit")
+					input(type="hidden",name="user_app_id",value="#{user_app_id}")					
+
+block inPageScript
+	script.
+		

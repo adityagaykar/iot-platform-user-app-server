@@ -1,0 +1,35 @@
+extends ../layout
+
+block content
+	h3 #{name}
+	hr
+	div.col-md-4
+		div.row
+			div.col-md-8
+				h4 Registered Rules
+			div.col-md-4
+				a.btn.btn-primary(href="/rules/#{user_app_id}/list") Add
+		table.table
+			tr
+				th Name
+				th Rule
+				th Threshold
+				th Condition
+				th Status
+				th 
+				th   
+			- each rule in rules
+				tr
+					td #{rule.name}
+					td #{rule.rule_name}
+					td #{rule.threshold}
+					td #{rule.condition}
+					td #{rule.status}
+					td
+						a(href="/rules/#{rule._id}/delete") delete
+					td
+						a(href="/rules/#{rule._id}/update") update
+
+block inPageScript
+	script.
+		

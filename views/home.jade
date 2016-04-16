@@ -1,0 +1,38 @@
+extends layout
+
+block content
+	if user
+		h3 Welcome, #{user.name}
+	hr
+	div.col-md-4
+		h4 IoT Applications
+		
+		table.table
+			tr
+				th Name
+				th Registration Key
+				th Access Token
+				th  
+				th  
+				th  
+			- each app,i in apps
+				tr
+					td #{app.name}
+					td #{app.registration_key}
+					td #{app.access_token}
+					td 
+						a(href="/apps/#{app._id}") view
+					td 
+						a(href="/apps/update/#{app._id}") update
+					td
+						a(href="/apps/delete/#{app._id}") delete
+	div.col-md-4
+		a.btn.btn-primary(href="/apps/register") Add
+
+			
+
+
+		
+block inPageScript
+	script.
+		

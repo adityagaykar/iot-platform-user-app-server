@@ -1,0 +1,39 @@
+extends ../layout
+
+block content
+	h3 Rules
+	hr
+	div.col-md-12
+		h4 Add Rule
+		div.col-md-6
+			form(method="POST", action="/rules/update")
+				div.form-group
+					label(for="name") Name:
+					input.form-control(required="required",type="text", name="name", value="#{rule.name}")				
+				div.form-group		
+					label(for="condition") Condition:
+					select#condition.form-control(required="required",name="condition")
+						option(value="<") <
+						option(value=">") >
+						option(value="=") =
+				div.form-group
+					label(for="threshold") Threshold:
+					input#threshold.form-control(required="required",name="threshold", type="text", , value="#{rule.threshold}")					
+				div.form-group
+					label(for="threshold") Frequency(in mins):
+					input.form-control(required="required",name="frequency", type="number", value="#{rule.frequency}")
+				div.form-group
+					label(for="condition") Status:
+					select#condition.form-control(required="required",name="status")
+						option(value="enable") Enable
+						option(value="disable") Disbable
+				div.col-md-offset-5
+					input.btn.btn-success(required="required",type="submit", value="Submit")
+					input(type="hidden",name="user_app_id",value="#{rule.app_id}")
+					input(type="hidden",name="rule_id",value="#{rule.rule_id}")
+					input(type="hidden",name="rule_name",value="#{rule.rule_name}")
+					input(type="hidden",name="id",value="#{rule.platform_user_rule_id}")
+
+block inPageScript
+	script.
+		

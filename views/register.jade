@@ -1,0 +1,20 @@
+extends layout
+
+block content	
+	h3 Register IoT User Application
+	hr
+	div.col-md-6
+		form#formLogin(method="POST", action="/apps/register")
+			div.form-group
+				label(for="name") Name: 
+				input#inputUsername.form-control(required="required",type="text", name="name")
+			div.form-group
+				label(for="password") Registration Key: 
+				input#inputPassword.form-control(type="text", name="registration_key",required="required")
+			div.col-md-offset-5
+				div.col-md-6
+					input.btn.btn-success(required="required",type="submit", value="Register")
+                                
+block inPageScript
+	script.
+		

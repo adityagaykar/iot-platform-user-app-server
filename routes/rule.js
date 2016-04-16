@@ -9,7 +9,7 @@ requestify = require('requestify'),
 Rule = mongoose.model('rule'),
 servers = require('../utils/servers');
 
-var iot_server = servers.iot_server;
+var iot_server = servers.iot_platform;
 /*GET add rule form*/
 
 router.get("/:id/list",function(req, res, next){
@@ -55,6 +55,8 @@ router.post("/register",function(req, res, next){
 	var gateway_id = gateway[0];
 	var gateway_name = gateway[1];
 	var sensor_id = req.body.sensor_type;
+	console.log("Servers : "+JSON.stringify(servers));
+	console.log("hostname : "+iot_server.hostname);
 	Apps.findOne({_id: user_app_id},function(err,app){
 		var uri = "http://"+iot_server.hostname+":"+iot_server.port+"/api/v1.0/rules/"+app.access_token+"/add";
 		requestify.post(uri,{

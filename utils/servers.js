@@ -7,6 +7,6 @@ var servers = {
 		hostname: "localhost",
 		port: 3001
 	}
-}
+};
 
 module.exports = servers;

@@ -9,7 +9,7 @@ requestify = require('requestify'),
 Rule = mongoose.model('rule'),
 servers = require('../utils/servers');
 
-var iot_server = servers.iot_server;
+var iot_server = servers.iot_platform;
 
 /*GET Register app form*/
 //localhost:3000/apps/register

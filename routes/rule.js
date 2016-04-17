@@ -10,6 +10,30 @@ Rule = mongoose.model('rule'),
 servers = require('../utils/servers');
 
 var iot_server = servers.iot_platform;
+
+/*GET stats page*/
+router.get("/:id/stats",function(req,res,next){
+	var id = req.params.id;
+	Rule.findOne({_id: id},function(err, rule){
+		var uri = "/rules/"+id+"/statsfetch";
+		res.render("rule/stats",{uri : uri, name: rule.rule_name });
+	});
+});
+/*GET stats*/
+router.get("/:id/statsfetch",function(req,res,next){
+	var id = req.params.id;
+	Rule.findOne({_id: id},function(err, rule){
+		requestify.get("http://"+iot_server.hostname+":"+iot_server.port+"/api/v1.0/datasets/"+rule.access_token+"/rules/"+rule.rule_id)
+		.then(function(response){
+			console.log(response);
+			var datasets = response.body;
+			datasets = JSON.parse(datasets);
+			var dataset = {name : rule.name, dataset : datasets.dataset};			
+			res.json(dataset);
+		});
+	});
+});
+
 /*GET add rule form*/
 
 router.get("/:id/list",function(req, res, next){
@@ -60,7 +84,7 @@ router.post("/register",function(req, res, next){
 	Apps.findOne({_id: user_app_id},function(err,app){
 		var uri = "http://"+iot_server.hostname+":"+iot_server.port+"/api/v1.0/rules/"+app.access_token+"/add";
 		requestify.post(uri,{
-			uid: uid,
+			access_token: app.access_token,
 			app_id: user_app_id,
 			name: name,
 			threshold: threshold,
@@ -79,6 +103,7 @@ router.post("/register",function(req, res, next){
 			
 				Rule.create({
 					platform_user_rule_id: rule._id,
+					access_token: rule.access_token,
 					uid: uid,
 					app_id: user_app_id,
 					name: name,
@@ -128,7 +153,6 @@ router.post("/update",function(req, res, next){
 		})
 		.then(function(response) {			
 			Rule.update({_id: id},{
-				id: id,
 				name: name,
 				threshold: threshold,
 				condition: condition,

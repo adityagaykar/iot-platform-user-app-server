@@ -1,0 +1,60 @@
+extends ../layout
+
+block content
+    h3 Rules
+    hr
+    div.col-md-12
+        h4 #{name}
+        div.col-md-6
+            canvas(id="canvas", height="400px", width="800px")
+
+block inPageScript
+    script(type="text/javascript", src="/javascripts/Chart.min.js")
+    script.        
+            $.get("#{uri}",function(response){
+                var dataset = response;
+                var yValues=[], xLabels = [];
+                var label = dataset.name;
+                console.log(label);
+                var cut_dataset = [];
+                var len_data = dataset.dataset.length;
+                if(len_data <= 20)
+                    cut_dataset = dataset.dataset;
+                else{
+                    for(var i = len_data-20; i < len_data; i++){
+                        cut_dataset.push(dataset.dataset[i]);
+                    }
+                }                
+                console.log(cut_dataset);
+                for (data of cut_dataset) {
+                    // extract values
+                    yValues.push(data.value);
+                    // extract timestamp in a Date object and format the output in a string
+                    var t = new Date(data.time_stamp);
+                    var cleanTime = (t.getDate()) +"/"+ (t.getMonth()+1) + " " + t.getHours() + ":" + t.getMinutes()
+                    // add formated timestamp to the array holding values for x axis
+                    xLabels.push(cleanTime)
+                }
+                var chartData = {
+                labels: xLabels,
+                datasets: [
+                    {
+                        label: label,
+                        fillColor: "rgba(220,220,220,0.2)",
+                        strokeColor: "rgba(220,220,220,1)",
+                        pointColor: "rgba(220,220,220,1)",
+                        pointStrokeColor: "#fff",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "rgba(220,220,220,1)",
+                        data: yValues
+                    }
+                ]            
+                }
+     
+                var ctx = document.getElementById("canvas").getContext("2d");
+     
+                new Chart(ctx).Line(chartData, {
+                    bezierCurve: false
+                });    
+            });
+            

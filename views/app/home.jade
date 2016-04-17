@@ -3,33 +3,60 @@ extends ../layout
 block content
 	h3 #{name}
 	hr
-	div.col-md-4
-		div.row
-			div.col-md-8
-				h4 Registered Rules
-			div.col-md-4
-				a.btn.btn-primary(href="/rules/#{user_app_id}/list") Add
-		table.table
-			tr
-				th Name
-				th Rule
-				th Threshold
-				th Condition
-				th Status
-				th 
-				th   
-			- each rule in rules
-				tr
-					td #{rule.name}
-					td #{rule.rule_name}
-					td #{rule.threshold}
-					td #{rule.condition}
-					td #{rule.status}
-					td
-						a(href="/rules/#{rule._id}/delete") delete
-					td
-						a(href="/rules/#{rule._id}/update") update
+	div.row
+		div.col-md-6			
+			div.col-md-12
+				div.col-md-8
+					h4 Registered Rules
+				div.col-md-4
+					a.btn.btn-primary(href="/rules/#{user_app_id}/list") Add
+			div.col-md-12
+				table.table.col-md-12
+					tr
+						th Name
+						th Rule
+						th Threshold
+						th Condition
+						th Status
+						th 
+						th 
+						th   
+					- each rule in rules
+						tr
+							td #{rule.name}
+							td #{rule.rule_name}
+							td #{rule.threshold}
+							td #{rule.condition}
+							td #{rule.status}
+							td
+								a(href="/rules/#{rule._id}/delete") delete
+							td
+								a(href="/rules/#{rule._id}/update") update
+							td
+								a(href="/rules/#{rule._id}/stats") stats
+		div.col-md-6
+			div.col-md-offset-1
+				div.panel.panel-info
+					div.panel-heading Notifications
+					ul#notifications.list-group(style="height: 400px; overflow-y: auto")
+
 
 block inPageScript
 	script.
+		function getNotifications(){
+			$.get("/apps/notifications/#{access_token}",function(messages){
+				var lists = []
+				for(var msg of messages){
+					lists.push("<li class='list-group-item'><p>"+msg.message+"</p><p>"+msg.time_stamp+"</p></li>");
+				}
+				$("#notifications").html(lists.join(""));
+			});
+		}
+		$(document).ready(function(){
+			getNotifications();
+			setInterval(function(){
+				getNotifications();
+		}, 5000);
+		});
+		
 		

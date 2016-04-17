@@ -11,6 +11,17 @@ servers = require('../utils/servers');
 
 var iot_server = servers.iot_platform;
 
+
+
+/*GET raw notifications*/
+router.get("/notifications/:access_token",function(req,res,next){
+	var msgs = [];
+	for(var i = 0; i < 10; i++){
+		msgs.push({message: "Message"+i, time_stamp: Date.now()});
+	}
+	res.json(msgs);
+});
+
 /*GET Register app form*/
 //localhost:3000/apps/register
 router.get("/register",function(req,res,next){
@@ -26,7 +37,7 @@ router.get('/:id', function(req, res, next) {
 		if(app){
 			
 			Rule.find({uid: user._id}, function(err, rules){
-				res.render("app/home",{name: app.name, rules : rules, user_app_id : app_id});	
+				res.render("app/home",{name: app.name, rules : rules, user_app_id : app_id, access_token : app.access_token});	
 			})
 			
 			//render the templates			

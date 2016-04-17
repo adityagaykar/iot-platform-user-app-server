@@ -4,6 +4,7 @@ var sha1 = require('sha1');
 var ruleSchema = new schema({
 	platform_user_rule_id: {type: String, required: true},
 	uid: {type: String, required: true},
+	access_token: {type: String, required: true},
 	app_id: {type: String, required: true},
 	name: {type: String, required: true},
 	threshold : {type: String, required: true},

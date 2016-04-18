@@ -1,6 +1,6 @@
 var servers = {
 	iot_platform: {
-		hostname: "localhost",
+		hostname: "10.2.132.150",
 		port: 3000
 	},
 	user_app_server: {
@@ -26,6 +26,9 @@ var servers = {
 	data_listener : {
 		hostname: "localhost",
 		port: 3006
+	},
+	db_server : {
+		hostname : "10.2.132.150"
 	}
 
 }

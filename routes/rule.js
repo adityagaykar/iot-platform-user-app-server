@@ -23,7 +23,7 @@ router.get("/:id/stats",function(req,res,next){
 router.get("/:id/statsfetch",function(req,res,next){
 	var id = req.params.id;
 	Rule.findOne({_id: id},function(err, rule){
-		requestify.get("http://"+iot_server.hostname+":"+iot_server.port+"/api/v1.0/datasets/"+rule.access_token+"/rules/"+rule.rule_id)
+		requestify.get("http://"+iot_server.hostname+":"+iot_server.port+"/api/v1.0/datasets/"+rule.access_token+"/rules/"+rule.user_rule_id)
 		.then(function(response){
 			console.log(response);
 			var datasets = response.body;
@@ -79,6 +79,7 @@ router.post("/register",function(req, res, next){
 	var gateway_id = gateway[0];
 	var gateway_name = gateway[1];
 	var sensor_id = req.body.sensor_type;
+	var user_rule_id = hat();
 	console.log("Servers : "+JSON.stringify(servers));
 	console.log("hostname : "+iot_server.hostname);
 	Apps.findOne({_id: user_app_id},function(err,app){
@@ -95,7 +96,8 @@ router.post("/register",function(req, res, next){
 			frequency: frequency,
 			gateway_id: gateway_id,
 			gateway_name: gateway_name,
-			sensor_id: sensor_id
+			sensor_id: sensor_id,
+			user_rule_id : user_rule_id
 		})
 		.then(function(response) {
 			var rule = response.body;
@@ -115,7 +117,8 @@ router.post("/register",function(req, res, next){
 					frequency: frequency,
 					gateway_id: gateway_id,
 					gateway_name: gateway_name,
-					sensor_id: sensor_id		
+					sensor_id: sensor_id,
+					user_rule_id: user_rule_id	
 				}, function(err, curr_rule){
 					res.redirect("/apps/"+app.access_token);
 				});

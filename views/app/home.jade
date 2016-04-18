@@ -52,7 +52,7 @@ block inPageScript
 						d.setTime(msg.time_stamp);				
 						time_str = d.toString();
 					}
-					lists.push("<li class='list-group-item bg-info'><p class='text-info'>"+msg.message+"</p><p class='text-muted small'>"+time_str+"</p></li>");
+					lists.push("<li class='list-group-item '><p class='text-info'>"+msg.message+"</p><p class='text-muted small'>"+time_str+"</p></li>");
 				}
 				$("#notifications").html(lists.join(""));
 			});

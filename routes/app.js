@@ -8,18 +8,35 @@ Apps = mongoose.model('Apps'),
 requestify = require('requestify'),
 Rule = mongoose.model('rule'),
 servers = require('../utils/servers');
-
 var iot_server = servers.iot_platform;
-
-
+var notification_server = servers.notification_server;
 
 /*GET raw notifications*/
 router.get("/notifications/:access_token",function(req,res,next){
+	var access_token = req.params.access_token;
 	var msgs = [];
-	for(var i = 0; i < 10; i++){
-		msgs.push({message: "Message"+i, time_stamp: Date.now()});
-	}
-	res.json(msgs);
+	// for(var i = 0; i < 10; i++){
+	// 	msgs.push({message: "Message"+i, time_stamp: Date.now()});
+	// }
+	// res.json(msgs);
+	requestify.get("http://"+notification_server.hostname+":"+notification_server.port+"/api/v1.0/pullnotifications/"+access_token)
+	.then(function(response){		
+		var messages = response.body;
+		console.log(messages);
+		if(messages) {
+			messages = JSON.parse(messages);
+			if(messages.length > 0){
+				for(var i = 0; i < messages.length; i++){
+					msgs.push({message: messages[i].message, time_stamp: messages[i].time_stamp});
+				}	
+			} else {
+				msgs.push({message : "No notifications", time_stamp: ""});
+			}	
+		} else {
+			msgs.push({message : "No notifications", time_stamp: ""});
+		}	
+		res.json(msgs);
+	});
 });
 
 /*GET Register app form*/
@@ -36,7 +53,7 @@ router.get('/:id', function(req, res, next) {
 	Apps.findOne({_id: app_id},function(err, app){
 		if(app){
 			
-			Rule.find({uid: user._id}, function(err, rules){
+			Rule.find({app_id: app_id}, function(err, rules){
 				res.render("app/home",{name: app.name, rules : rules, user_app_id : app_id, access_token : app.access_token});	
 			})
 			
@@ -95,16 +112,12 @@ router.get("/update/:id",function(req,res,next){
 	
 });
 
-/*Perform edit app name*/
+/*Delete app*/
 
-router.post("/update",function(req,res,next){
-	var app_id = req.body.app_id;
-	var name = req.body.name;
-	Apps.update({
-		name : name
-	},function(err,app){
-		res.redirect("/home");	
-	});
+router.get("/delete/:id",function(req,res,next){
+	var id = req.params.id;
+	Apps.remove({_id: id}).exec();
+	res.redirect("/home");
 })
 
 module.exports = router;

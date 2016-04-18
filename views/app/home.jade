@@ -35,7 +35,7 @@ block content
 							td
 								a(href="/rules/#{rule._id}/stats") stats
 		div.col-md-5
-			div.panel.panel-info
+			div.panel.panel-primary
 				div.panel-heading Notifications
 				ul#notifications.list-group(style="height: 400px; overflow-y: auto")
 
@@ -44,9 +44,15 @@ block inPageScript
 	script.
 		function getNotifications(){
 			$.get("/apps/notifications/#{access_token}",function(messages){
-				var lists = []
+				var lists = []							
 				for(var msg of messages){
-					lists.push("<li class='list-group-item'><p>"+msg.message+"</p><p>"+msg.time_stamp+"</p></li>");
+					var time_str= "";				
+					if(msg.time_stamp != ""){
+						var d = new Date();
+						d.setTime(msg.time_stamp);				
+						time_str = d.toString();
+					}
+					lists.push("<li class='list-group-item bg-info'><p class='text-info'>"+msg.message+"</p><p class='text-muted small'>"+time_str+"</p></li>");
 				}
 				$("#notifications").html(lists.join(""));
 			});

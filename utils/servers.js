@@ -16,8 +16,8 @@ var servers = {
 		port: 3003
 	},
 	notification_server:{
-		hostname: "localhost",
-		port: 3004
+		hostname: "10.1.129.29",
+		port: 5000
 	},
 	data_server: {
 		hostname: "localhost",

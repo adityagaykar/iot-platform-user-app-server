@@ -40,7 +40,7 @@ router.get("/:id/list",function(req, res, next){
 	var user_app_id = req.params.id;
 	//fetch all rule templates from platform
 	Apps.findOne({_id : user_app_id}, function(err, app){
-		var uri = "http://localhost:3000/api/v1.0/rules/"+app.access_token;
+		var uri = "http://"+iot_server.hostname+":"+iot_server.port+"/api/v1.0/rules/"+app.access_token;
 		requestify.get(uri)
 		.then(function(response) {
 			var rules = response.body;

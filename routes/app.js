@@ -11,6 +11,25 @@ servers = require('../utils/servers');
 var iot_server = servers.iot_platform;
 var notification_server = servers.notification_server;
 
+/*GET getway status*/
+///gatewaystatus/#{access_token}
+
+router.get("/gatewaystatus/:access_token",function(req,res,next){
+	var access_token = req.params.access_token;
+	var msgs = [];		
+	requestify.post("http://"+iot_server.hostname+":"+iot_server.port+"/api/v1.0/gateways/"+access_token+"/status",
+			{timeout: 3000}
+		)
+	.then(function(response){		
+		var messages = response.body;
+		console.log(messages);
+		if(messages) {
+			res.json(messages);
+		} else {
+			res.json({error: "Invalid request"});
+		}	
+	});
+});
 /*GET raw notifications*/
 router.get("/notifications/:access_token",function(req,res,next){
 	var access_token = req.params.access_token;
@@ -19,7 +38,9 @@ router.get("/notifications/:access_token",function(req,res,next){
 	// 	msgs.push({message: "Message"+i, time_stamp: Date.now()});
 	// }
 	// res.json(msgs);
-	requestify.get("http://"+notification_server.hostname+":"+notification_server.port+"/api/v1.0/pullnotifications/"+access_token)
+	requestify.get("http://"+notification_server.hostname+":"+notification_server.port+"/api/v1.0/pullnotifications/"+access_token,
+			{timeout: 3000}
+		)
 	.then(function(response){		
 		var messages = response.body;
 		console.log(messages);

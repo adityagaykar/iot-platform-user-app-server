@@ -130,12 +130,13 @@ router.post("/register",function(req, res, next){
 router.get("/:id/update",function(req,res,next){
 	var user_rule_id = req.params.id;
 	Rule.findOne({_id : user_rule_id},function(err, rule){
-		res.render("rule/edit",{rule: rule});
+		res.render("rule/edit",{rule: rule, user_rule_id: user_rule_id});
 	});
 });
 
 /*POST register rule on platform as well as user-app db*/
-router.post("/update",function(req, res, next){
+router.post("/update/:user_rule_id",function(req, res, next){
+	var user_rule_id = req.params.user_rule_id;
 	var user_app_id = req.body.user_app_id;		
 	var uid = req.session.user._id;	
 	var name = req.body.name;
@@ -155,13 +156,14 @@ router.post("/update",function(req, res, next){
 			frequency: frequency,			
 		})
 		.then(function(response) {			
-			Rule.update({_id: id},{
+			Rule.update({_id: user_rule_id},{
 				name: name,
 				threshold: threshold,
 				condition: condition,
 				status: status,
 				frequency: frequency
 			},function(err,rule){
+				console.log("RULE UPDATE ERROR : "+JSON.stringify(rule) +" "+ user_rule_id +" "+ status);
 				res.redirect("/apps/"+app.access_token);				
 			});			
 		});										

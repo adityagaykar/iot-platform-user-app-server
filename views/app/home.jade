@@ -5,35 +5,49 @@ block content
 	hr
 	div.col-md-12
 		div.col-md-7			
-			div.col-md-12
-				div.col-md-8
-					h4 Registered Rules
-				div.col-md-4
-					a.btn.btn-primary(href="/rules/#{user_app_id}/list") Add
-			div.col-md-12
-				table.table.col-md-12
-					tr
-						th Name
-						th Rule
-						th Threshold
-						th Condition
-						th Status
-						th 
-						th 
-						th   
-					- each rule in rules
-						tr
-							td #{rule.name}
-							td #{rule.rule_name}
-							td #{rule.threshold}
-							td #{rule.condition}
-							td #{rule.status}
-							td
-								a(href="/rules/#{rule._id}/delete") delete
-							td
-								a(href="/rules/#{rule._id}/update") update
-							td
-								a(href="/rules/#{rule._id}/stats") stats
+			ul.nav.nav-tabs
+				li.active
+					a(data-toggle="tab", href="#gateways") Gateways
+				li
+					a(data-toggle="tab", href="#rules") Rules
+			div.tab-content
+				div#gateways.tab-pane.fade.in.active
+					div.col-md-12(style="margin-top: 15px;")						
+						div.col-md-8
+							h4 Assigned Gateways						
+					div.col-md-12
+						table#status_data.table.col-md-12							
+					
+				div#rules.tab-pane.fade				
+					div.col-md-12(style="margin-top: 15px;")						
+						div.col-md-8
+							h4 Registered Rules
+						div.col-md-4
+							a.btn.btn-primary(href="/rules/#{user_app_id}/list") Add
+					div.col-md-12
+						table.table.col-md-12
+							tr
+								th Name
+								th Rule
+								th Threshold
+								th Condition
+								th Status
+								th 
+								th 
+								th   
+							- each rule in rules
+								tr
+									td #{rule.name}
+									td #{rule.rule_name}
+									td #{rule.threshold}
+									td #{rule.condition}
+									td #{rule.status}
+									td
+										a(href="/rules/#{rule._id}/delete") delete
+									td
+										a(href="/rules/#{rule._id}/update") update
+									td
+										a(href="/rules/#{rule._id}/stats") stats
 		div.col-md-5
 			div.panel.panel-primary
 				div.panel-heading Notifications
@@ -57,10 +71,39 @@ block inPageScript
 				$("#notifications").html(lists.join(""));
 			});
 		}
+		function getGatewayStatus(){
+			$.get("/apps/gatewaystatus/#{access_token}",function(messages){
+				if(messages.error){
+					console.log("Error fetching gateway status");
+				} else {
+					var lists = []	
+					messages = JSON.parse(messages);
+					console.log(messages);	
+					lists.push("<tr><th>Gateway</th><th>Status</th><th>Last active</th></tr>");
+					if(messages.length > 0){
+						for(var msg of messages){
+							if(msg.status == "Online")
+								lists.push("<tr><td>"+msg.name+"</td><td> <p class='label label-success'>"+msg.status+"</p></td><td></td></tr>");
+							else {
+								if(msg.time_stamp == "-1")
+									lists.push("<tr><td>"+msg.name+"</td><td><p class='label label-default'>"+msg.status+"</p></td><td><p class='text-muted small'>"+"Yet to be commisioned"+"</p></td></tr>");
+								else
+									lists.push("<tr><td>"+msg.name+"</td><td><p class='label label-default'>"+msg.status+"</p></td><td><p class='text-muted small'>"+(new Date(parseInt(msg.time_stamp))).toString()+"</p></td></tr>");
+							}
+						}						
+					} else {
+						lists.push("<tr><td>No gateways assigned yet</td><td></td><td></td></tr>")
+					}
+					$("#status_data").html(lists.join(""));
+				}
+			});	
+		}
 		$(document).ready(function(){
+			getGatewayStatus();
 			getNotifications();
 			setInterval(function(){
 				getNotifications();
+				getGatewayStatus();
 		}, 5000);
 		});
 		

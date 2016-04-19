@@ -6,7 +6,7 @@ block content
 	div.col-md-12
 		h4 Add Rule
 		div.col-md-6
-			form(method="POST", action="/rules/update")
+			form(method="POST", action="/rules/update/#{user_rule_id}")
 				div.form-group
 					label(for="name") Name:
 					input.form-control(required="required",type="text", name="name", value="#{rule.name}")				
